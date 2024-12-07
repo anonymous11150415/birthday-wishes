@@ -644,7 +644,262 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             z-index: 100;
         }
+
+        /* 分享功能样式 */
+        .share-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        .share-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ff4081;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .share-button:hover {
+            transform: scale(1.1);
+        }
+
+        .share-menu {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .share-menu.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .share-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .share-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .share-item i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        /* 贺卡功能样式 */
+        .card-editor {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 800px;
+            height: 80vh;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .card-editor.active {
+            display: flex;
+        }
+
+        .card-toolbar {
+            width: 200px;
+            background: #f5f5f5;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+        }
+
+        .card-preview {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card-template {
+            width: 400px;
+            height: 600px;
+            position: relative;
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .card-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            color: #333;
+        }
+
+        .card-text {
+            min-height: 100px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+        }
+
+        .card-text:focus {
+            outline: none;
+            border-color: #ff4081;
+        }
+
+        .decoration-item {
+            width: 40px;
+            height: 40px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+
+        .decoration-item:hover {
+            transform: scale(1.1);
+        }
+
+        /* 背景动画效果 */
+        .floating-bubble {
+            position: fixed;
+            pointer-events: none;
+            animation: float 20s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(1);
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+            }
+        }
+
+        /* 页面切换动画 */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ff4081;
+            transform-origin: right;
+            transform: scaleX(0);
+            z-index: 9999;
+        }
+
+        .page-transition.active {
+            animation: pageTransition 1s ease-in-out;
+        }
+
+        @keyframes pageTransition {
+            0% {
+                transform: scaleX(0);
+            }
+            50% {
+                transform: scaleX(1);
+            }
+            100% {
+                transform: scaleX(0);
+            }
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .cake-container {
+                transform: scale(0.8);
+            }
+
+            .photo-wall {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .game-card {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .card-editor {
+                width: 95%;
+                height: 90vh;
+            }
+
+            .card-toolbar {
+                width: 100px;
+            }
+
+            .card-template {
+                width: 300px;
+                height: 450px;
+            }
+
+            .countdown-container {
+                transform: scale(0.8);
+                right: 10px;
+                top: 10px;
+            }
+
+            .music-playlist {
+                width: 250px;
+                right: 10px;
+            }
+        }
+
+        /* 触摸设备优化 */
+        @media (hover: none) {
+            .game-card:hover {
+                transform: none;
+            }
+
+            .share-button:hover {
+                transform: none;
+            }
+
+            .decoration-item:hover {
+                transform: none;
+            }
+        }
     </style>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body>
     <!-- 入场动画界面 -->
@@ -740,6 +995,58 @@
             </div>
         </section>
     </div>
+
+    <!-- 分享功能 -->
+    <div class="share-container">
+        <button class="share-button" onclick="toggleShare()">📤</button>
+        <div class="share-menu" id="shareMenu">
+            <div class="share-item" onclick="shareToWeChat()">
+                <i>💬</i> 微信
+            </div>
+            <div class="share-item" onclick="shareToWeibo()">
+                <i>🌐</i> 微博
+            </div>
+            <div class="share-item" onclick="shareToQQ()">
+                <i>💫</i> QQ
+            </div>
+            <div class="share-item" onclick="copyLink()">
+                <i>🔗</i> 复制链接
+            </div>
+        </div>
+    </div>
+
+    <!-- 贺卡编辑器 -->
+    <div class="card-editor" id="cardEditor">
+        <div class="card-toolbar">
+            <h3>背景</h3>
+            <div class="background-list">
+                <img src="bg1.jpg" onclick="changeBackground('bg1.jpg')" class="decoration-item">
+                <img src="bg2.jpg" onclick="changeBackground('bg2.jpg')" class="decoration-item">
+                <img src="bg3.jpg" onclick="changeBackground('bg3.jpg')" class="decoration-item">
+            </div>
+            <h3>装饰</h3>
+            <div class="decoration-list">
+                <div onclick="addDecoration('🎂')" class="decoration-item">🎂</div>
+                <div onclick="addDecoration('🎈')" class="decoration-item">🎈</div>
+                <div onclick="addDecoration('🎁')" class="decoration-item">🎁</div>
+                <div onclick="addDecoration('🎉')" class="decoration-item">🎉</div>
+                <div onclick="addDecoration('💝')" class="decoration-item">💝</div>
+            </div>
+            <button onclick="saveCard()" style="margin-top: 20px;">保存贺卡</button>
+            <button onclick="closeCardEditor()" style="margin-top: 10px;">关闭</button>
+        </div>
+        <div class="card-preview">
+            <div class="card-template" id="cardTemplate">
+                <img class="card-background" src="bg1.jpg">
+                <div class="card-content">
+                    <div class="card-text" contenteditable="true">在这里写下你的祝福...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面切换动画 -->
+    <div class="page-transition"></div>
 
     <!-- 音乐控制器 -->
     <div class="music-controller" onclick="toggleMusic()">
@@ -1396,6 +1703,180 @@
         document.getElementById('bgMusic').addEventListener('ended', () => {
             currentSong = (currentSong + 1) % playlist.length;
             changeSong(currentSong);
+        });
+
+        // 分享功能
+        function toggleShare() {
+            const shareMenu = document.getElementById('shareMenu');
+            shareMenu.classList.toggle('active');
+        }
+
+        function shareToWeChat() {
+            // 生成分享二维码
+            const url = window.location.href;
+            // 这里可以调用微信分享API
+            alert('请截图后在微信中分享');
+        }
+
+        function shareToWeibo() {
+            const text = '送上最真挚的生日祝福！';
+            const url = window.location.href;
+            window.open(`http://service.weibo.com/share/share.php?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
+        }
+
+        function shareToQQ() {
+            const text = '送上最真挚的生日祝福！';
+            const url = window.location.href;
+            window.open(`http://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`);
+        }
+
+        function copyLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('链接已复制到剪贴板！');
+            });
+        }
+
+        // 贺卡功能
+        function openCardEditor() {
+            document.getElementById('cardEditor').classList.add('active');
+        }
+
+        function closeCardEditor() {
+            document.getElementById('cardEditor').classList.remove('active');
+        }
+
+        function changeBackground(bg) {
+            document.querySelector('.card-background').src = bg;
+        }
+
+        function addDecoration(emoji) {
+            const decoration = document.createElement('div');
+            decoration.textContent = emoji;
+            decoration.style.cssText = `
+                position: absolute;
+                font-size: 30px;
+                cursor: move;
+                user-select: none;
+            `;
+            
+            // 使装饰可拖动
+            decoration.onmousedown = function(e) {
+                const rect = document.querySelector('.card-template').getBoundingClientRect();
+                const offsetX = e.clientX - decoration.offsetLeft;
+                const offsetY = e.clientY - decoration.offsetTop;
+
+                function onMouseMove(e) {
+                    const x = e.clientX - rect.left - offsetX;
+                    const y = e.clientY - rect.top - offsetY;
+                    decoration.style.left = `${x}px`;
+                    decoration.style.top = `${y}px`;
+                }
+
+                function onMouseUp() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', onMouseUp);
+            };
+
+            document.querySelector('.card-content').appendChild(decoration);
+        }
+
+        function saveCard() {
+            html2canvas(document.querySelector('.card-template')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'birthday-card.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+
+        // 背景动画
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'floating-bubble';
+            bubble.style.left = Math.random() * window.innerWidth + 'px';
+            bubble.style.width = Math.random() * 30 + 20 + 'px';
+            bubble.style.height = bubble.style.width;
+            bubble.style.background = `hsla(${Math.random() * 360}, 70%, 50%, 0.3)`;
+            bubble.style.borderRadius = '50%';
+            document.body.appendChild(bubble);
+
+            bubble.addEventListener('animationend', () => {
+                bubble.remove();
+            });
+        }
+
+        // 定期创建气泡
+        setInterval(createBubble, 2000);
+
+        // 页面切换动画
+        function transitionToPage(url) {
+            const transition = document.querySelector('.page-transition');
+            transition.classList.add('active');
+            
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+            
+            setTimeout(() => {
+                transition.classList.remove('active');
+            }, 1000);
+        }
+
+        // 移动端触摸事件优化
+        document.addEventListener('touchstart', function() {
+            // 防止默认滚动行为
+            event.preventDefault();
+        }, { passive: false });
+
+        // 性能优化
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 优化滚动事件
+        const optimizedScroll = debounce(function() {
+            // 处理滚动相关的视觉效果
+            const scrolled = window.scrollY;
+            document.querySelectorAll('.photo-item').forEach(item => {
+                const rect = item.getBoundingClientRect();
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    item.style.transform = `translateY(${scrolled * 0.1}px)`;
+                }
+            });
+        }, 16);
+
+        window.addEventListener('scroll', optimizedScroll);
+
+        // 添加页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化所有功能
+            updateCountdown();
+            createBubble();
+            
+            // 检测设备类型并优化交互
+            if ('ontouchstart' in window) {
+                document.body.classList.add('touch-device');
+            }
+            
+            // 预加载图片
+            const images = ['bg1.jpg', 'bg2.jpg', 'bg3.jpg'];
+            images.forEach(src => {
+                const img = new Image();
+                img.src = src;
+            });
         });
     </script>
 </body>
