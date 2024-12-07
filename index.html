@@ -235,6 +235,90 @@
         .qr-code:hover {
             transform: scale(1.05);
         }
+
+        /* 气球样式 */
+        .balloon {
+            position: absolute;
+            width: 60px;
+            height: 70px;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253);
+            border-radius: 50%;
+            cursor: grab;
+            transform-origin: bottom center;
+            animation: float 3s ease-in-out infinite;
+            z-index: 1000;
+        }
+        
+        .balloon::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 20px;
+            background: #c0392b;
+            bottom: -10px;
+            left: 25px;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+        }
+
+        /* 幸运签样式 */
+        .fortune {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #ffd32a;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .fortune:hover {
+            transform: scale(1.1);
+            transition: transform 0.3s;
+        }
+
+        /* 愿望树样式 */
+        .wish-tree {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .tree-leaf {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #00b894;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .wish-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1100;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
     </style>
 </head>
 <body>
@@ -275,6 +359,25 @@
 
     <!-- 添加礼物盒 -->
     <div class="gift-box" onclick="openGift()"></div>
+
+    <!-- 添加气球 -->
+    <div class="balloon" style="top: 100px; left: 100px;"></div>
+    <div class="balloon" style="top: 150px; left: 300px;"></div>
+    <div class="balloon" style="top: 200px; left: 500px;"></div>
+
+    <!-- 幸运签 -->
+    <div class="fortune" onclick="drawFortune()">🎋</div>
+
+    <!-- 愿望树 -->
+    <div class="wish-tree" onclick="showWishForm()"></div>
+
+    <!-- 愿望输入弹窗 -->
+    <div class="wish-popup" id="wishPopup">
+        <h3>写下你的愿望</h3>
+        <input type="text" id="wishInput" placeholder="输入你的愿望...">
+        <button onclick="addWish()">挂上愿望</button>
+        <button onclick="closeWishPopup()">关闭</button>
+    </div>
 
     <audio id="bgMusic" loop>
         <source src="music/江存潇_-_记忆博物馆_(纯音乐版)_.mp3" type="audio/mpeg">
@@ -412,6 +515,94 @@
                 }
             }, { once: true });
         });
+
+        // 气球拖拽功能
+        const balloons = document.querySelectorAll('.balloon');
+        balloons.forEach(balloon => {
+            balloon.addEventListener('mousedown', startDragging);
+        });
+
+        function startDragging(e) {
+            const balloon = e.target;
+            let offsetX = e.clientX - balloon.offsetLeft;
+            let offsetY = e.clientY - balloon.offsetTop;
+
+            function drag(e) {
+                balloon.style.left = (e.clientX - offsetX) + 'px';
+                balloon.style.top = (e.clientY - offsetY) + 'px';
+            }
+
+            function stopDragging() {
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('mouseup', stopDragging);
+            }
+
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDragging);
+        }
+
+        // 幸运签功能
+        const fortunes = [
+            '今年会有意想不到的惊喜！',
+            '你的梦想即将实现！',
+            '会遇到生命中的贵人！',
+            '将有一次难忘的旅行！',
+            '会收到一份特别的礼物！',
+            '将迎来事业的新机遇！'
+        ];
+
+        function drawFortune() {
+            const fortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+            alert('你的幸运签：' + fortune);
+        }
+
+        // 愿望树功能
+        function createLeaf(x, y, text) {
+            const leaf = document.createElement('div');
+            leaf.className = 'tree-leaf';
+            leaf.style.left = x + 'px';
+            leaf.style.top = y + 'px';
+            leaf.title = text;
+            leaf.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 50%)`;
+            
+            leaf.addEventListener('mouseover', () => {
+                leaf.style.transform = 'scale(2)';
+            });
+            
+            leaf.addEventListener('mouseout', () => {
+                leaf.style.transform = 'scale(1)';
+            });
+
+            document.querySelector('.wish-tree').appendChild(leaf);
+        }
+
+        function showWishForm() {
+            document.getElementById('wishPopup').style.display = 'block';
+        }
+
+        function closeWishPopup() {
+            document.getElementById('wishPopup').style.display = 'none';
+        }
+
+        function addWish() {
+            const wish = document.getElementById('wishInput').value;
+            if (wish.trim()) {
+                const x = Math.random() * 80;
+                const y = Math.random() * 180;
+                createLeaf(x, y, wish);
+                closeWishPopup();
+                document.getElementById('wishInput').value = '';
+            }
+        }
+
+        // 初始化愿望树的一些装饰叶子
+        for (let i = 0; i < 10; i++) {
+            createLeaf(
+                Math.random() * 80,
+                Math.random() * 180,
+                '生日快乐！'
+            );
+        }
     </script>
 </body>
 </html>
