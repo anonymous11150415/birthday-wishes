@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music Test</title>
+</head>
+<body>
+    <h1>Music Test Page</h1>
+    <audio id="bgMusic" controls>
+        <source src="music/happy-birthday.mp3" type="audio/mpeg">
+    </audio>
+    <button onclick="toggleMusic()">Play/Pause Music</button>
+
+    <script>
+        const audio = document.getElementById('bgMusic');
+        function toggleMusic() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        }
+    </script>
+</body>
+</html>
