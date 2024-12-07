@@ -538,6 +538,112 @@
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             }
         }
+
+        /* 倒计时样式 */
+        .countdown-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            text-align: center;
+        }
+
+        .countdown-title {
+            font-size: 16px;
+            color: #ff4081;
+            margin-bottom: 10px;
+        }
+
+        .countdown-time {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .countdown-label {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* 音乐播放列表样式 */
+        .music-playlist {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-width: 300px;
+            display: none;
+        }
+
+        .playlist-title {
+            font-size: 16px;
+            color: #ff4081;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .playlist-item:hover {
+            background-color: rgba(255, 64, 129, 0.1);
+        }
+
+        .playlist-item.active {
+            background-color: rgba(255, 64, 129, 0.2);
+        }
+
+        .playlist-item-title {
+            flex-grow: 1;
+            margin-left: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .show-playlist {
+            position: fixed;
+            bottom: 20px;
+            right: 80px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ff4081;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
@@ -644,6 +750,47 @@
     <audio id="bgMusic" loop>
         <source src="music/江存潇_-_记忆博物馆_(纯音乐版)_.mp3" type="audio/mpeg">
     </audio>
+
+    <!-- 倒计时容器 -->
+    <div class="countdown-container">
+        <div class="countdown-title">距离生日还有</div>
+        <div class="countdown-time">
+            <div class="countdown-item">
+                <span class="countdown-number" id="countdown-days">00</span>
+                <span class="countdown-label">天</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="countdown-hours">00</span>
+                <span class="countdown-label">时</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="countdown-minutes">00</span>
+                <span class="countdown-label">分</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-number" id="countdown-seconds">00</span>
+                <span class="countdown-label">秒</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 音乐播放列表 -->
+    <button class="show-playlist" onclick="togglePlaylist()">🎵</button>
+    <div class="music-playlist" id="musicPlaylist">
+        <div class="playlist-title">生日歌单</div>
+        <div class="playlist-item active" onclick="changeSong(0)">
+            <span class="playlist-item-title">生日快乐歌</span>
+        </div>
+        <div class="playlist-item" onclick="changeSong(1)">
+            <span class="playlist-item-title">祝你生日快乐</span>
+        </div>
+        <div class="playlist-item" onclick="changeSong(2)">
+            <span class="playlist-item-title">Happy Birthday To You</span>
+        </div>
+        <div class="playlist-item" onclick="changeSong(3)">
+            <span class="playlist-item-title">生日祝福歌</span>
+        </div>
+    </div>
 
     <script>
         // 入场动画控制
@@ -758,13 +905,19 @@
         function playBalloonGame() {
             let score = 0;
             const gameArea = document.createElement('div');
-            gameArea.style.position = 'fixed';
-            gameArea.style.top = '0';
-            gameArea.style.left = '0';
-            gameArea.style.width = '100%';
-            gameArea.style.height = '100%';
-            gameArea.style.background = 'rgba(0,0,0,0.8)';
-            gameArea.style.zIndex = '1000';
+            gameArea.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            `;
 
             const scoreDisplay = document.createElement('div');
             scoreDisplay.style.position = 'fixed';
@@ -819,6 +972,268 @@
                     </div>
                 `;
             }, 30000);
+        }
+
+        // 记忆配对游戏
+        function playMemoryGame() {
+            const emojis = ['🎂', '🎈', '🎁', '🎉', '🎊', '🎵', '🎸', '🎺'];
+            const cards = [...emojis, ...emojis];
+            let flippedCards = [];
+            let matchedPairs = 0;
+            let canFlip = true;
+
+            // 创建游戏区域
+            const gameArea = document.createElement('div');
+            gameArea.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            `;
+
+            // 创建游戏容器
+            const gameContainer = document.createElement('div');
+            gameContainer.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+                padding: 20px;
+                background: white;
+                border-radius: 10px;
+                max-width: 500px;
+            `;
+
+            // 洗牌算法
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // 创建卡片
+            shuffle(cards).forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.style.cssText = `
+                    width: 100px;
+                    height: 100px;
+                    background: #ff4081;
+                    border-radius: 10px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 40px;
+                    cursor: pointer;
+                    transition: transform 0.3s;
+                    transform-style: preserve-3d;
+                `;
+                card.innerHTML = '<span style="display: none;">' + emoji + '</span>';
+                
+                card.onclick = () => {
+                    if (!canFlip || card.classList.contains('flipped')) return;
+                    
+                    card.classList.add('flipped');
+                    card.querySelector('span').style.display = 'block';
+                    card.style.background = 'white';
+                    flippedCards.push(card);
+
+                    if (flippedCards.length === 2) {
+                        canFlip = false;
+                        const [card1, card2] = flippedCards;
+                        
+                        if (card1.textContent === card2.textContent) {
+                            matchedPairs++;
+                            flippedCards = [];
+                            canFlip = true;
+                            createConfetti();
+                            
+                            if (matchedPairs === emojis.length) {
+                                setTimeout(() => {
+                                    alert('恭喜你完成了记忆配对游戏！');
+                                    gameArea.remove();
+                                }, 500);
+                            }
+                        } else {
+                            setTimeout(() => {
+                                card1.classList.remove('flipped');
+                                card2.classList.remove('flipped');
+                                card1.querySelector('span').style.display = 'none';
+                                card2.querySelector('span').style.display = 'none';
+                                card1.style.background = '#ff4081';
+                                card2.style.background = '#ff4081';
+                                flippedCards = [];
+                                canFlip = true;
+                            }, 1000);
+                        }
+                    }
+                };
+                
+                gameContainer.appendChild(card);
+            });
+
+            // 添加关闭按钮
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '关闭游戏';
+            closeButton.style.cssText = `
+                margin-top: 20px;
+                padding: 10px 20px;
+                background: #ff4081;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            `;
+            closeButton.onclick = () => gameArea.remove();
+
+            gameArea.appendChild(gameContainer);
+            gameArea.appendChild(closeButton);
+            document.body.appendChild(gameArea);
+        }
+
+        // 拼图游戏
+        function playPuzzleGame() {
+            const gameArea = document.createElement('div');
+            gameArea.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            `;
+
+            const puzzleContainer = document.createElement('div');
+            puzzleContainer.style.cssText = `
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 2px;
+                padding: 10px;
+                background: white;
+                border-radius: 10px;
+                position: relative;
+            `;
+
+            const pieces = [];
+            const size = 3;
+            let emptyIndex = size * size - 1;
+
+            // 创建拼图图案
+            function createPuzzlePattern(element, index) {
+                const colors = ['#ff4081', '#3f51b5', '#4caf50', '#ffc107', '#9c27b0', '#00bcd4', '#ff5722', '#795548'];
+                element.style.background = colors[index % colors.length];
+                element.style.display = 'flex';
+                element.style.justifyContent = 'center';
+                element.style.alignItems = 'center';
+                element.style.fontSize = '24px';
+                element.style.color = 'white';
+                element.textContent = index + 1;
+            }
+
+            // 检查是否可以移动
+            function canMove(index) {
+                const row = Math.floor(index / size);
+                const col = index % size;
+                const emptyRow = Math.floor(emptyIndex / size);
+                const emptyCol = emptyIndex % size;
+                
+                return (
+                    (Math.abs(row - emptyRow) === 1 && col === emptyCol) ||
+                    (Math.abs(col - emptyCol) === 1 && row === emptyRow)
+                );
+            }
+
+            // 检查是否完成
+            function checkWin() {
+                return pieces.every((piece, index) => {
+                    return index === size * size - 1 || 
+                           parseInt(piece.textContent) === index + 1;
+                });
+            }
+
+            // 创建拼图块
+            for (let i = 0; i < size * size; i++) {
+                const piece = document.createElement('div');
+                piece.style.cssText = `
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: transform 0.2s;
+                `;
+
+                if (i !== size * size - 1) {
+                    createPuzzlePattern(piece, i);
+                }
+
+                piece.onclick = () => {
+                    const index = pieces.indexOf(piece);
+                    if (canMove(index)) {
+                        // 交换位置
+                        [pieces[index], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[index]];
+                        puzzleContainer.innerHTML = '';
+                        pieces.forEach(p => puzzleContainer.appendChild(p));
+                        emptyIndex = index;
+
+                        if (checkWin()) {
+                            createConfetti();
+                            setTimeout(() => {
+                                alert('恭喜你完成了拼图游戏！');
+                                gameArea.remove();
+                            }, 500);
+                        }
+                    }
+                };
+
+                pieces.push(piece);
+            }
+
+            // 打乱拼图
+            function shufflePuzzle() {
+                for (let i = 0; i < 100; i++) {
+                    const movablePieces = pieces.reduce((acc, piece, index) => {
+                        if (canMove(index)) acc.push(index);
+                        return acc;
+                    }, []);
+
+                    const randomIndex = movablePieces[Math.floor(Math.random() * movablePieces.length)];
+                    [pieces[randomIndex], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[randomIndex]];
+                    emptyIndex = randomIndex;
+                }
+            }
+
+            shufflePuzzle();
+            pieces.forEach(piece => puzzleContainer.appendChild(piece));
+
+            // 添加关闭按钮
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '关闭游戏';
+            closeButton.style.cssText = `
+                margin-top: 20px;
+                padding: 10px 20px;
+                background: #ff4081;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            `;
+            closeButton.onclick = () => gameArea.remove();
+
+            gameArea.appendChild(puzzleContainer);
+            gameArea.appendChild(closeButton);
+            document.body.appendChild(gameArea);
         }
 
         // 礼物盒功能
@@ -920,6 +1335,67 @@
                     );
                 }
             }, 2000);
+        });
+
+        // 倒计时功能
+        function updateCountdown() {
+            const birthday = new Date('2024-12-25T00:00:00'); // 设置目标生日日期
+            const now = new Date();
+            const diff = birthday - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown-days').textContent = String(days).padStart(2, '0');
+                document.getElementById('countdown-hours').textContent = String(hours).padStart(2, '0');
+                document.getElementById('countdown-minutes').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('countdown-seconds').textContent = String(seconds).padStart(2, '0');
+            } else {
+                document.querySelector('.countdown-container').innerHTML = `
+                    <div class="countdown-title">🎉 生日快乐！ 🎉</div>
+                `;
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // 音乐播放列表功能
+        const playlist = [
+            'birthday.mp3',
+            'happy_birthday_chinese.mp3',
+            'happy_birthday_english.mp3',
+            'birthday_wish.mp3'
+        ];
+
+        let currentSong = 0;
+
+        function togglePlaylist() {
+            const playlist = document.getElementById('musicPlaylist');
+            playlist.style.display = playlist.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function changeSong(index) {
+            if (index === currentSong) return;
+
+            currentSong = index;
+            const audio = document.getElementById('bgMusic');
+            audio.src = playlist[index];
+            audio.play();
+
+            // 更新活动项
+            document.querySelectorAll('.playlist-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+        }
+
+        // 音乐自动播放下一首
+        document.getElementById('bgMusic').addEventListener('ended', () => {
+            currentSong = (currentSong + 1) % playlist.length;
+            changeSong(currentSong);
         });
     </script>
 </body>
